@@ -20,6 +20,9 @@ export interface IProductData {
   catalog: IProduct[];
   preview: string | null;
   order: IFormOrder;
+  addProduct(productId: string): void;
+  deleteProduct(cardId: string): void;
+  getProduct(productId: string): IProduct;
 }
 
 export interface IFormOrderResult {
