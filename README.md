@@ -46,7 +46,7 @@ yarn build
 Карточка товара
 
 ```
-export interface IProduct {
+interface IProduct {
 	id: string;
 	image: string;
 	category: string;
@@ -59,7 +59,7 @@ export interface IProduct {
 Данные для формы заказа
 
 ```
-export interface IFormOrder {
+interface IFormOrder {
 	items: string[];
 	payment: string;
 	address: string;
@@ -72,7 +72,7 @@ export interface IFormOrder {
 Интерфейс для модели данных карточек
 
 ```
-export interface IProductData {
+interface IProductData {
 	catalog: IProduct[];
 	preview: string | null;
 }
@@ -81,7 +81,7 @@ export interface IProductData {
 Интерфейс для формы успешного заказа
 
 ```
-export interface IFormOrderResult {
+interface IFormOrderResult {
 	id: string;
 	total: number;
 }
@@ -90,13 +90,13 @@ export interface IFormOrderResult {
 Данные карточки, используемые в модальном окне с корзиной
 
 ```
-export type TBasketProduct = Pick<IProduct, 'id' | 'title' | 'price'>;
+type TBasketProduct = Pick<IProduct, 'id' | 'title' | 'price'>;
 ```
 
 Основные данные, которые заполняет пользователь при заказе
 
 ```
-export type TOrderInfo = Pick<IFormOrder, 'payment' | 'address' | 'email' | 'phone'>;
+type TOrderInfo = Pick<IFormOrder, 'payment' | 'address' | 'email' | 'phone'>;
 ```
 
 ## Архитектура приложения
@@ -238,6 +238,7 @@ export type TOrderInfo = Pick<IFormOrder, 'payment' | 'address' | 'email' | 'pho
 присутсвуют во всех представлениях карточек.
 В конструктор класса передается DOM элемент темплейта, что позволяет при необходимости формировать карточки разных вариантов верстки.
 В классе устанавливаются слушатель на кнопку добавления товара в корзину или на клик по контейнеру, если кнопки в представлении нет.\
+- constructor(protected blockName: string, container: HTMLElement, actions?: ICardActions)
 
 Методы:
 - сеттеры и геттеры
@@ -249,8 +250,8 @@ export type TOrderInfo = Pick<IFormOrder, 'payment' | 'address' | 'email' | 'pho
 Методы:
 - сеттеры и геттеры
 
-#### Класс PreviewItem
-Расширяет класс CatalogItem для добавления описания товара в превью.
+#### Класс DescriptionItem
+Расширяет класс CatalogItem для добавления описания товара в превью при открытии модального окна.
 
 #### Класс BasketItem
 Класс наследуется от Card и отвечает за отображение карточки в корзине. В конструктор передается контейнер с разметкой и функция-обработчик.
