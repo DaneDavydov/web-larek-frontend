@@ -20,9 +20,7 @@ export interface IProductData {
   catalog: IProduct[];
   preview: string | null;
   order: IFormOrder;
-  addProduct(productId: string): void;
-  deleteProduct(cardId: string): void;
-  getProduct(productId: string): IProduct;
+  basket: Map<string, number>;
 }
 
 export interface IFormOrderResult {
@@ -30,7 +28,9 @@ export interface IFormOrderResult {
   total: number;
 }
 
-export type TBasketProduct = Pick<IProduct, 'id' | 'title' | 'description'>;
+export type TBasketProduct = Pick<IProduct, 'id' | 'title' | 'price'>;
 
 export type TOrderInfo = Pick<IFormOrder, 'payment' | 'address' | 'email' | 'phone'>;
+
+export type FormErrors = Partial<Record<keyof IFormOrder, string>>;
 
