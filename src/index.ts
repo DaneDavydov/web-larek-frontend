@@ -4,14 +4,14 @@ import { AppAPI } from './components/AppAPI';
 import { API_URL, CDN_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { EventEmitter } from './components/base/events';
-import { AppData, CatalogChangeEvent, Product } from './components/AppData';
+import { AppData } from './components/AppData';
 import { Page } from './components/Page';
 import { BasketItem, CatalogItem, DescriptionItem } from './components/Card';
 import { OrderData, Contacts } from './components/OrderData';
 import { Modal } from './components/common/Modal';
 import { Basket } from './components/common/Basket';
 import { Success } from './components/common/Succes';
-import { TOrderInfo } from './types';
+import { IProduct, TOrderInfo } from './types';
 
 const events = new EventEmitter();
 const api = new AppAPI(CDN_URL, API_URL);
@@ -36,6 +36,12 @@ const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 const basket = new Basket(cloneTemplate(basketTemplate), events);
 
 const contacts = new Contacts(cloneTemplate(contactsTemplate), events);
+const success = new Success(cloneTemplate(successTemplate), {
+  onClick: () => {
+    modal.close();
+  },
+});
+
 const order = new OrderData(cloneTemplate(orderTemplate), events, {
   onButtonCardClick: () => {
     appData.order.payment = 'card';
@@ -48,7 +54,7 @@ const order = new OrderData(cloneTemplate(orderTemplate), events, {
 });
 
 // Изменились элементы каталога
-events.on<CatalogChangeEvent>('items:changed', () => {
+events.on('items:changed', () => {
   page.catalog = appData.catalog.map((item) => {
     const card = new CatalogItem(cloneTemplate(cardCatalogTemplate), {
       onClick: () => events.emit('card:select', item),
@@ -96,13 +102,13 @@ events.on('basket:open', () => {
 });
 
 // Открыть карточку
-events.on('card:select', (item: Product) => {
+events.on('card:select', (item: IProduct) => {
   appData.getProduct(item);
 });
 
 // Изменен открытый выбранный лот
-events.on('preview:changed', (item: Product) => {
-  const showItem = (item: Product) => {
+events.on('preview:changed', (item: IProduct) => {
+  const showItem = (item: IProduct) => {
     const card = new DescriptionItem(cloneTemplate(cardPreviewTemplate), {
       onClick: () => {
         appData.toggleOrderedProduct(item.id, item.price);
@@ -187,22 +193,16 @@ events.on('order:submit', () => {
 events.on('contacts:submit', () => {
   api.orderLots(appData.order)
     .then((result) => {
-      appData.clearBasket();
-      const success = new Success(cloneTemplate(successTemplate), {
-        onClick: () => {
-          modal.close();
-        },
-      });
-
       modal.render({
         content: success.render({
           total: result.total,
         }),
       });
+      appData.clearBasket();
     })
     .catch((err) => {
       console.error(err);
-    });
+    });``
 });
 
 // Блокируем прокрутку страницы если открыта модалка

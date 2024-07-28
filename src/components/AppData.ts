@@ -1,19 +1,6 @@
 import { IProduct, IFormOrder, IProductData, FormErrors, TBasketProduct, TOrderInfo } from "../types/";
 import { Model } from "./base/Model";
 
-export type CatalogChangeEvent = {
-  catalog: Product[]
-};
-
-export class Product extends Model<IProduct> {
-  id: string;
-  image: string;
-  category: string;
-  title: string;
-  description: string;
-  price: number | null;
-}
-
 export class AppData extends Model<IProductData> {
   catalog: IProduct[];
   preview: string | null;
@@ -23,11 +10,11 @@ export class AppData extends Model<IProductData> {
   formContactsErrors: FormErrors = {};
 
   setCatalog(items: IProduct[]) {
-    this.catalog = items.map(item => new Product(item, this.events));
-    this.emitChanges('items:changed', { catalog: this.catalog });
+    this.catalog = items;
+    this.emitChanges('items:changed')
   }
 
-  getProduct(item: Product) {
+  getProduct(item: IProduct) {
     this.preview = item.id;
     this.emitChanges('preview:changed', item);
   }
