@@ -143,16 +143,6 @@ type TOrderInfo = Pick<IFormOrder, 'payment' | 'address' | 'email' | 'phone'>;
 
 ### Слой данных
 
-#### Класс Product
-Класс наследуется от Model с типом IProduct, отвечает за хранения данных товара.\
-В полях класса хранятся следующие данные:
-- id: string; - id товара
-- image: string; - картинка товара
-- category: string; - категория товара
-- title: string; - имя товара
-- description: string; - описание товара
-- price: number | null; - цена товара
-
 #### Класс AppData
 Класс отвечает за хранение и логику работы с данными.\
 Конструктор класса принимает инстант брокера событий\
